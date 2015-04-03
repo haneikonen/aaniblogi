@@ -1,0 +1,59 @@
+.top{
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+}
+.main{
+	margin-left: auto;
+	margin-right: auto;
+	width: 1160px;
+}
+.titlediv{
+
+}
+.aiheet_nav{
+
+}
+[class*='aihe_'] {
+  float: left;
+  width: 20%;
+}
+.keskustelut{
+	
+}
+[class*='kesk_1_'] {
+  float: left;
+  width: 33.33%;
+}
+[class*='kesk_'] {
+  /*padding-right: 20px;*/
+  padding: 12px 0 12px 12px;
+}
+[class*='kesk_']:last-of-type {
+  padding-right: 0;
+}
+.kesk_1_1{
+	/*width: 33.33%;*/
+}
+.kesk_1_2{
+	/*width: 33.33%;*/
+}
+.kesk_1_3{
+	/*width: 33.33%;*/
+}
+[class*='kesk_2_'] {
+  float: left;
+  width: 33.33%;
+}
+.bottom{
+
+}
+html, body {
+  height: 100%; 
+  font-size: 100%; }
+
+*, *:after, *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}

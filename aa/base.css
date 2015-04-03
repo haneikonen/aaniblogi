@@ -1,0 +1,26 @@
+input[type="submit"]{
+	background-color:#59d914;
+	color:#fcfcfc;
+	font-family: 'Oswald', sans-serif;
+	font-size:32px;
+	border:none;
+	padding:3px 15px 3px 15px;
+	outline:none;
+}
+
+input[type="submit"]:hover{
+	background-color:green;
+}
+
+input[type="text"] {
+	font-family: 'Abel', sans-serif;
+    font-size: 14px;
+	width: 25em;
+	height:1.5em;
+    display: block;
+	padding-left:1em;
+    margin-bottom: 10px;
+    background-color: white;
+	border:0.1em solid #cdcdcd;
+	outline:none;
+}
