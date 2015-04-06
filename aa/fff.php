@@ -1,9 +1,16 @@
-<?php 
+<?php
+require_once('../../db_con/dbYhteys.php');
+require_once('../../db_con/funktiot.php');
+require_once('../../db_con/dbFunctions.php');
+?>
+
+<?php /* 
 session_start();
 require_once('funktiot/dbYhteys.php');
 require_once('funktiot/funktiot.php');
 require_once('funktiot/dbFunctions.php');
 SSLon();
+*/
 
 //Login -> $_SESSION['kirjautunut']='loggedIn'	
 if(!empty($_POST['username'])&&!empty($_POST['pwd'])){
@@ -25,7 +32,7 @@ if ($_SESSION['kirjautunut'] == 'loggedIn'):
 ?>
 	<p>This Should Show Up Only When Logged In?</p>
 	<a href="<?php echo $_SERVER['PHP_SELF']; ?>?action=logout">Logout</a>
-	<p>Username: <?php echo $_POST['usernames'] ?> </p>
+	<p>Username: <?php echo $_POST['username'] ?> </p>
 	<?php require_once('julkaisu.php');?>
 	
 <?php
