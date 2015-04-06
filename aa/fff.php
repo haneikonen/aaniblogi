@@ -1,21 +1,35 @@
 <?php
-require_once('../../db_con/dbYhteys.php');
-require_once('../../db_con/funktiot.php');
-require_once('../../db_con/dbFunctions.php');
-?>
-
-<?php /* 
 session_start();
-require_once('funktiot/dbYhteys.php');
-require_once('funktiot/funktiot.php');
-require_once('funktiot/dbFunctions.php');
+require_once('yhteiset/dbYhteys.php');
+require_once('yhteiset/funktiot.php');
+require_once('yhteiset/dbFunctions.php');
 SSLon();
-*/
-
 //Login -> $_SESSION['kirjautunut']='loggedIn'	
 if(!empty($_POST['username'])&&!empty($_POST['pwd'])){
 	if(check_user($_POST['username'], $_POST['pwd'], $DBH)){
-		 $_SESSION['kirjautunut'] = 'loggedIn';
+		$_SESSION['kirjautunut'] = 'loggedIn';
+		$userInfoSql=("
+			SELECT
+				u.userID
+			FROM
+				a_kayttaja u
+			WHERE
+				u.username='".$_POST['username']."'"
+			);
+	//echo("UINFO SQUEEL".$userInfoSql);
+	
+		$STH=$DBH->query($userInfoSql);
+	$STH->setFetchMode(PDO::FETCH_ASSOC);
+
+try{
+	while($row=$STH->fetch()){
+		$_SESSION['user']=$row['userID'];   //KÄYTTÄJÄN ID SESSIOTA VARTEN MUUTTUJASSA $_SESSION['user']
+		//echo($_SESSION['user']);			// JOKAISELLE SIVULLE LAITETTAVA session_start(); ALKUUN ETTÄ TOIMII^^
+	}
+}catch(PDOException $e){
+	echo "Jotain meni pieleen :(";
+	file_put_contents('../../loki/PDOErrors.txt', $e->getMessage()."\n",FILE_APPEND);
+}
 	} else {
 		echo '<script>alert("Login Failure");</script>';
 	}

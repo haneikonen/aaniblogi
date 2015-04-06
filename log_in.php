@@ -3,7 +3,7 @@ session_start();
 require_once('yhteiset/dbYhteys.php');
 require_once('yhteiset/funktiot.php');
 require_once('yhteiset/dbFunctions.php');
-SSLon();
+//SSLon();
 //Login -> $_SESSION['kirjautunut']='loggedIn'	
 if(!empty($_POST['user'])&&!empty($_POST['pwd'])){
 	if(check_user($_POST['user'], $_POST['pwd'], $DBH)){
