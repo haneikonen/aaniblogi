@@ -25,7 +25,7 @@ if (!empty($_POST['username'])&&!empty($_POST['password'])&&!empty($_POST['email
 	$data['username'] = $_POST['username'];
 	$data['password'] = $_POST['password'];
 	$data['email'] = $_POST['email'];
-	$hashpwd = hash('md5', $password);
+	$hashpwd = hash('md5', $_POST['password']);
 	
 	try {
 		$STH = $DBH->prepare("INSERT INTO a_kayttaja (`username`, `password`, `email`) VALUES ('".$_POST['username']."','".$hashpwd."','".$_POST['email']."')");
