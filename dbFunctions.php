@@ -1,19 +1,22 @@
 <?php
 function check_user($user, $pwd, $DBH) {
-	$hashpwd = hash('md5', $pwd);
-	$sql = "SELECT * FROM a_kayttaja WHERE username='$user' AND
-	password = '$hashpwd'";
-	try {
-		$numRows = $DBH->exec($DBH->quote($sql));
-		if($numRows > 0){
-			return true;
-		} else {
-			return false;
-		}
-	} catch(PDOException $e) {
-		echo "Login DB error.";
-		file_put_contents('../../loki/PDOErrors.txt', $e->getMessage()."\n", FILE_APPEND);
-	}
+    $hashpwd = hash('md5', $pwd);
+    $data = array('k' => $user, 'passu' => $hashpwd);
+    try {
+        $STH = $DBH->prepare("SELECT * FROM a_kayttaja WHERE username=:k AND
+        password = :passu");
+        $STH->execute($data);
+        $row = $STH->fetch();
+        // print_r($row);
+        if($STH->rowCount() > 0){
+            return true;
+        } else {
+            return false;
+        }
+    } catch(PDOException $e) {
+        echo "Login DB error.";
+        file_put_contents('..\loki\PDOErrors.txt', $e->getMessage()."\n", FILE_APPEND);
+    }
 }
 
 
