@@ -1,0 +1,115 @@
+@charset "utf-8";
+body {
+	background-color: #6674b2;
+}
+
+.top{
+	margin-left: auto;
+	margin-right: auto;
+	height: 50px;
+	padding: 12px;
+	
+	background-color: #97b4d1;
+}
+
+.main{
+	margin-left: auto;
+	margin-right: auto;
+	height: 85%;
+	width: 1160px;
+	
+	background-color: #d7e5ee;
+}
+/*title and login*/
+.logtitle{
+	background-color: #96a4d2;
+}
+.titlediv{
+	height: 80px;
+	width: 70%;
+	float: left;
+
+	background-color: #bde6e1;
+}
+.login{
+	height: 80px;
+	width: 30%;
+	float: left;
+
+	background-color: #bfd5d7;
+}
+/*aiheet*/
+.aiheet_nav{
+	
+}
+[class*='aihe_'] {
+  float: left;
+  height: 33px;
+  padding: 8px;
+  
+  width: 17.50%;
+	background-color: #bac2ca;
+}
+.searchbar{
+	float: left;
+}
+.keskustelut{
+	
+}
+[class*='kesk_1_'] {
+  float: left;
+  width: 33.33%;	
+}
+[class*='kesk_'] {
+  /*padding-right: 20px;*/
+  padding: 12px 0px 12px 12px;
+	background-color: white;
+	border-style: solid;
+    border-width: 1px;
+	
+	padding: 12px;
+}
+[class*='kesk_']:last-of-type {
+  padding-right: 0;
+}
+
+.kesk_1_1{
+}
+.kesk_1_2{
+}
+.kesk_1_3{
+}
+
+[class*='kesk_2_'] {
+  float: left;
+  width: 33.33%;
+}
+.bottom{
+	background-color: #bec3c9;
+	float: left;
+}
+html, body {
+  height: 100%; 
+  font-size: 100%; }
+
+*, *:after, *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin:0;padding:0;
+}
+/*MEDIA QUERIES*/
+@media all and ( max-width: 1135px ) {
+	[class*='kesk_'] {
+		width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+		}
+	[class*='aihe_'] {
+		width: 100%;
+		}
+	.titlediv{
+		width: 100%;
+		}
+}/* CSS Document */
+
