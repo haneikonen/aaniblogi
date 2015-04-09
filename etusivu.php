@@ -179,7 +179,7 @@ endif;
 			height: 110,
 			plugins: {
 				wavesurfer: {
-					src: "audio/test.mp3",
+					src: "<?php echo($row_toka['url']); ?>",
 					msDisplayMax: 10,
 					waveColor: "grey",
 					progressColor: "black",
@@ -209,7 +209,7 @@ endif;
 			height: 110,
 			plugins: {
 				wavesurfer: {
-					src: "audio/test.mp3",
+					src: "<?php echo($row_kolmas['url']); ?>",
 					msDisplayMax: 10,
 					waveColor: "grey",
 					progressColor: "black",
