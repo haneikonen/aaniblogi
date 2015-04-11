@@ -228,22 +228,35 @@ endif;
 Additionaly it provides some tools useful in real-life cases. Such as the ability for the user to mute the sound. Its is useful when the user is at the office or any place where it isn't polite to have a loud computer :) 
 			</div>
             <!-- Lisätään julkaisujen tiedot niiden paikoilleen-->
-          	<?php			
-			if ($_SESSION['kirjautunut'] == 'loggedIn'):
-			?>
         <script>
         	$("#sisalto1").append('<?php echo($row_eka['sisalto']); ?>');
         	$("#sisalto2").append('<?php echo($row_toka['sisalto']); ?>');
         	$("#sisalto3").append('<?php echo($row_kolmas['sisalto']); ?>');
-		<?php 	endif; ?>
-        	$("#title_kesk_1_1").append('<?php echo($row_eka['title']); ?>');
+			$("#title_kesk_1_1").append('<?php echo($row_eka['title']); ?>');
 			$("#kuvaus1").append('<?php echo($row_eka['kuvaus']); ?>');
 			$("#title_kesk_1_2").append('<?php echo($row_toka['title']); ?>');
 			$("#kuvaus2").append('<?php echo($row_toka['kuvaus']); ?>');
 			$("#title_kesk_1_3").append('<?php echo($row_kolmas['title']); ?>');
 			$("#kuvaus3").append('<?php echo($row_kolmas['kuvaus']); ?>');
     	</script>
-		</div>
+
+          	<?php			
+			if ($_SESSION['kirjautunut'] == 'loggedIn'):
+		    ?>
+            <script>
+			$("#sisalto1").show();
+        	$("#sisalto2").show();
+        	$("#sisalto3").show();
+		 	</script>
+			<?php else: ?>
+			<script>
+			$("#sisalto1").hide();
+        	$("#sisalto2").hide();
+        	$("#sisalto3").hide();
+			</script>
+			<?php endif ?>
+        
+	</div>
 		<div class="kesk_2_1">
 			<iframe width="380" height="214" src="https://www.youtube.com/embed/RVB7uSPr4Ns" frameborder="0" allowfullscreen></iframe>
 			</div>
