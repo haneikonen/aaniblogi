@@ -114,10 +114,16 @@ endif;
      	<input type="submit" name="go" value="Go" class="button" />
 	 </div>
 			<?php
+					// Suosituimpien julkaisujen selvitys
+					
+							// Selvitetään montako julkaisua meillä on
+	
 			$lkm = $DBH->prepare("SELECT COUNT(ID) FROM a_julkaisu WHERE ID;");
 			$lkm->execute();
 			$lkm_data = $lkm->fetch();
 			//echo($lkm_data['COUNT(ID)']);
+
+							// Selvitetään kuinka monta kommenttia kussakin julkaisussa on
 
 			for ($i = 1; $i <= $lkm_data['COUNT(ID)']; $i++) {
 				$popularity = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$i.";");
