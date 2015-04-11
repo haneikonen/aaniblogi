@@ -144,6 +144,8 @@ endif;
 						
 						};
 			}
+			
+			//Suosituimman julkaisun tiedot
 			$popularTitle=$DBH->prepare('SELECT title FROM a_julkaisu WHERE ID ='.$popularId.';');
 			$popularTitle->execute();
 			$popularTitle_data=$popularTitle->fetch();
