@@ -124,16 +124,17 @@ endif;
 			//echo($lkm_data['COUNT(ID)']);
 
 							// Selvitetään kuinka monta kommenttia kussakin julkaisussa on
-
+			$mostPopular=0;
 			for ($i = 1; $i <= $lkm_data['COUNT(ID)']; $i++) {
 				$popularity = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$i.";");
 				$popularity->execute();
 				$popularity_data = $popularity->fetch();
-					if ($popularity_data['COUNT(julkaisu)'] > 2){
-						echo($popularity_data['COUNT(julkaisu)']);
+					if ($popularity_data['COUNT(julkaisu)'] > $mostPopular){
+						$mostPopular=$popularity_data['COUNT(julkaisu)'];
+						//secho($popularity_data['COUNT(julkaisu)']." ");
+						
 						};
-
-			}
+			}echo('Winner'.$mostPopular);
 
 			// Haetaan julkaisujen tiedot
 			
