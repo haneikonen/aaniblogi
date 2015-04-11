@@ -119,6 +119,18 @@ endif;
 	 </div>
 			<?php
 			// Haetaan julkaisujen tiedot
+			$lkm = $DBH->prepare("SELECT COUNT(ID) FROM a_julkaisu WHERE ID;");
+			$lkm->execute();
+			$lkm_data = $lkm->fetch();
+			//echo($lkm_data['COUNT(ID)']);
+
+			for ($i = 1; $i <= $lkm_data['COUNT(ID)']; $i++) {
+				$popularity = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$i.";");
+				$popularity->execute();
+				$popularity_data = $popularity->fetch();
+				echo($popularity_data['COUNT(julkaisu)']);
+			}
+			
 			
 			$STH = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE 	ID = 1;");
 			$STH->execute();
