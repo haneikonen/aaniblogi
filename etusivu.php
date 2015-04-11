@@ -132,7 +132,7 @@ endif;
 $mostPopularID = [];
 
 
-			for ($i = 0; $i <= $lkm_data['COUNT(ID)']; $i++) {
+			for ($i = 1; $i <= $lkm_data['COUNT(ID)']; $i++) {
 				$popularity = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$i.";");
 				$popularity->execute();
 				$popularity_data = $popularity->fetch();
