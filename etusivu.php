@@ -124,21 +124,25 @@ endif;
 			$lkm = $DBH->prepare("SELECT COUNT(ID) FROM a_julkaisu WHERE ID;");
 			$lkm->execute();
 			$lkm_data = $lkm->fetch();
-			//echo($lkm_data['COUNT(ID)']);
+
 
 							// Selvitetään kuinka monta kommenttia kussakin julkaisussa on
+							// sekä mikä niidtä on suosituin, ja otetaan selville mikä on
+							// suosituimman ID
+$mostPopularID = [];
 
-			for ($i = 1; $i <= $lkm_data['COUNT(ID)']; $i++) {
+
+			for ($i = 0; $i <= $lkm_data['COUNT(ID)']; $i++) {
 				$popularity = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$i.";");
 				$popularity->execute();
 				$popularity_data = $popularity->fetch();
 					if ($popularity_data['COUNT(julkaisu)'] > $popular_max[0]){
 						 $popular_max[0] = $popularity_data['COUNT(julkaisu)'] ;
-						};
-
+						 $mostPopularID[0] = $i;
+						}
 			}
 
-
+				
 			// Haetaan julkaisujen tiedot
 			
 			$STH = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE 	ID = 1;");
@@ -152,7 +156,9 @@ endif;
 			$STH3 = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE 	ID = 3;");
 			$STH3->execute();
 			$row_kolmas = $STH3->fetch();
-			echo($popular_max[0]);
+			echo( $mostPopularID[0]."RUNKKU");
+			echo( $mostPopularID[1]."HOMO");
+			echo( $mostPopularID[2]."KUSIPÄÄ");
 			?>
 	 
 	<div class="keskustelut">
