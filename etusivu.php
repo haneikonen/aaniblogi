@@ -89,11 +89,7 @@ if($_GET['action'] == 'logout'){
 	$("#loggaus").replaceWith('<a href="<?php echo $_SERVER[´PHP_SELF´]; ?>?action=logout">Logout	</a>');
     </script>
 
-<?php
-//Else Login-palikka
-//else: 
-?>
-<!--<a href="#" data-reveal-id="login">Login</a> -->
+
 
 <?php
 // lopeta if
@@ -118,7 +114,6 @@ endif;
      	<input type="submit" name="go" value="Go" class="button" />
 	 </div>
 			<?php
-			// Haetaan julkaisujen tiedot
 			$lkm = $DBH->prepare("SELECT COUNT(ID) FROM a_julkaisu WHERE ID;");
 			$lkm->execute();
 			$lkm_data = $lkm->fetch();
@@ -128,9 +123,13 @@ endif;
 				$popularity = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$i.";");
 				$popularity->execute();
 				$popularity_data = $popularity->fetch();
-				echo($popularity_data['COUNT(julkaisu)']);
+					if ($popularity_data['COUNT(julkaisu)'] > 2){
+						echo($popularity_data['COUNT(julkaisu)']);
+						};
+
 			}
-			
+
+			// Haetaan julkaisujen tiedot
 			
 			$STH = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE 	ID = 1;");
 			$STH->execute();
@@ -173,7 +172,7 @@ endif;
 		player.el().style.backgroundColor = "#FFEEFF";
 		</script>
 		<h3 id="kuvaus1"></h3>
-   		<div id="sisalto1"></div>
+   		<div class="sisalto_1"></div>
         </div>
         <div class="kesk_1_2">
         <h2 id="title_kesk_1_2"></h2>
@@ -204,7 +203,7 @@ endif;
 		player.el().style.backgroundColor = "#FFEEFF";
 		</script>
         <h3 id="kuvaus2"></h3>
-   		<div id="sisalto2"></div>
+   		<div class="sisalto_2"></div>
         
 			</div>
 		<div class="kesk_1_3">
@@ -234,16 +233,16 @@ endif;
 		player.el().style.backgroundColor = "#FFEEFF";
 		</script>
 		<h3 id="kuvaus3"></h3>
-   		<div id="sisalto3"></div>
+   		<div class="sisalto_3"></div>
         This helper provides a main line out with the good practices from "Developing Game Audio with the Web Audio API" on html5rocks. So it provides a clipping detection and a dynamic compressor to reduce clipping to improve sound quality.
 
 Additionaly it provides some tools useful in real-life cases. Such as the ability for the user to mute the sound. Its is useful when the user is at the office or any place where it isn't polite to have a loud computer :) 
 			</div>
             <!-- Lisätään julkaisujen tiedot niiden paikoilleen-->
         <script>
-        	$("#sisalto1").append('<?php echo($row_eka['sisalto']); ?>');
-        	$("#sisalto2").append('<?php echo($row_toka['sisalto']); ?>');
-        	$("#sisalto3").append('<?php echo($row_kolmas['sisalto']); ?>');
+        	$(".sisalto_1").append('<?php echo($row_eka['sisalto']); ?>');
+        	$(".sisalto_2").append('<?php echo($row_toka['sisalto']); ?>');
+        	$(".sisalto_3").append('<?php echo($row_kolmas['sisalto']); ?>');
 			$("#title_kesk_1_1").append('<?php echo($row_eka['title']); ?>');
 			$("#kuvaus1").append('<?php echo($row_eka['kuvaus']); ?>');
 			$("#title_kesk_1_2").append('<?php echo($row_toka['title']); ?>');
