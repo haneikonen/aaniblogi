@@ -132,25 +132,21 @@ endif;
 $mostPopularID = [];
 
 
-			for ($i = 1; $i <= $lkm_data['COUNT(ID)']; $i++) {
+			for ($i = 0; $i < $lkm_data['COUNT(ID)']; $i++) {
 				$popularity = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$i.";");
 				$popularity->execute();
 				$popularity_data = $popularity->fetch();
-				$popular_max[$i] = $popularity_data['COUNT(julkaisu)'];
-				$mostPopularID[$i] = $i;
-					if ($popular_max[$i] >= $popular_max[0]){
-						 $popular_max[0] = $popularity_data['COUNT(julkaisu)'] ;
+				$mostPopularID[$i-1] = $i;
+			 	$popular_max[$i-1] = intval($popularity_data['COUNT(julkaisu)']) ;		
+			 			if ($popular_max[$i-1] >= $popular_max[0]){
 						 $mostPopularID[0] = $i;
-						}/*else{
-							$popular_max[$i] = $popularity_data['COUNT(julkaisu)'] ;
-							$mostPopularID[$i] = $i;
-							}*/
-			}
+						}
+					}
 
 				
 			// Haetaan julkaisujen tiedot
 			
-			$STH = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE 	ID = ".$mostPopularID[0].";");
+			$STH = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE 	ID = ".$mostPopularID[2].";");
 			$STH->execute();
 			$row_eka = $STH->fetch();
 			
@@ -158,10 +154,21 @@ $mostPopularID = [];
 			$STH2->execute();
 			$row_toka = $STH2->fetch();
 			
-			$STH3 = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE ID = ".$mostPopularID[2].";");
+			$STH3 = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE ID = ".$mostPopularID[0].";");
 			$STH3->execute();
 			$row_kolmas = $STH3->fetch();
-		
+			echo( $mostPopularID[0].'jippii');
+			echo( $mostPopularID[1]);
+			echo( $mostPopularID[2].'hups');
+			echo( $popular_max[0].'shit');
+			echo( $popular_max[1]);
+			echo( $popular_max[2].'hups');
+			echo( $popular_max[3].'hups');
+
+					
+			
+			
+			
 			?>
 	 
 	<div class="keskustelut">
