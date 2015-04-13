@@ -86,11 +86,12 @@ endif;
 <div id="comment" class="reveal-modal" data-reveal>
   <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 	<input type="text" name="kommentti" placeholder="Kommenttisi" />
-<!--	<input type="text" name="username" value=" username" /> -->
     <input type="submit" name="add_comment" value="Kommentoi" class="button" />
   </form>
   <a class="close-reveal-modal">&#215;</a> </div>
 <?php
+		// Selvitetään mikä on sisäänkirjautuneen käyttäjan ID
+
 $data['user_ID'] = $_POST['username'] ;
 $user = $DBH->prepare("SELECT userID FROM a_kayttaja WHERE username = '".$_POST['username']."';");
 $user->execute();
@@ -100,9 +101,8 @@ $userID = $user_data['userID'];
 
 if (!empty($_POST['kommentti'])){
 	$data['kommentti'] = $_POST['kommentti'];
-
-	
-	try {// Puuttuu julkaisu
+				// Lisätään kommentti tauluun kommentin tiedot
+	try {
 		$STH = $DBH->prepare("INSERT INTO a_kommentti (`user_ID`,`kommentti`, `audio`) VALUES ('".$userID."','".$_POST['kommentti']."','".$_POST['audio']."')");
 		$STH->execute($data);
 		echo 'Lisäys onnistui';
