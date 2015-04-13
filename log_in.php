@@ -44,21 +44,11 @@ if($_GET['action'] == 'logout'){
 //Tarkastetaan sisäänkirjatuminen, jos inessä näytetään "Logout"
 if ($_SESSION['kirjautunut'] == 'loggedIn'):
 ?>
-	<p>This Should Show Up Only When Logged In?</p>
 	<a href="<?php echo $_SERVER['PHP_SELF']; ?>?action=logout">Logout</a>
 	<p>Username: <?php echo $_POST['username'] ?> </p>
-	<?php require_once('julkaisu.php');?>
-	
-<?php
-//Else Login-palikka
-else: 
-?>
-<a href="#" data-reveal-id="login">Login</a>
-
-<?php
-// lopeta if
+	<?php require_once('julkaisu.php');	
 endif;
-		  ?>
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,14 +57,31 @@ endif;
 	<link href='https://fonts.googleapis.com/css?family=Oswald:700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
 	<meta charset="utf-8">
+    		<script src="js/video.js"></script>
+		<script src="js/wavesurfer.min.js"></script>
+		<script src="js/videojs.wavesurfer.js"></script>
+		<script src="js/funktioita.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
-<div id="login" class="reveal-modal">
-  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <input type="text" name="username" placeholder="insert username" />
-    <input type="password" name="pwd" placeholder="insert password" />
-    <input type="submit" name="login" value="Login" class="button" />
-  </form>
-  <a class="close-reveal-modal"></a></div>
+	<div class="login" id="login">
+			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+   			<input type="text" name="username" placeholder="username" id="user"/>
+			<input type="password" name="pwd" placeholder="password" id="pwd"/>
+			<input type="submit" name="kirjaudu" value="Login" class="button" id="loggaus" />
+	</div>
+    
+    
+<?php if ($_SESSION['kirjautunut'] == 'loggedIn'):
+	?>
+	<script>
+	$("#user").hide();
+	$("#pwd").hide();
+	$("#loggaus").replaceWith('<a href="<?php echo $_SERVER[´PHP_SELF´]; ?>?action=logout">Logout	</a>');
+    </script>
+<?php
+// lopeta if
+endif;
+?>
 </body>
 </html>
