@@ -96,18 +96,21 @@ if($_GET['action'] == 'logout'){
 endif;
 ?>
 	<div class="aiheet_nav">
-		<div class="aihe_1">
-			aihe1
-			</div>
-		<div class="aihe_2">
-			aihe2
-			</div>
-		<div class="aihe_3">
-			aihe3
-			</div>
-		<div class="aihe_4">
-			aihe4
-			</div>
+		<?php 
+			$aihelkm=$DBH->prepare("SELECT COUNT(ID) FROM a_aihealue WHERE ID;");
+			$aihelkm->execute();
+			$aihelkm_data = $aihelkm->fetch();
+
+			for($z=1;$z <=$aihelkm_data['COUNT(ID)'];$z++){
+				$aihe= $DBH->prepare("SELECT aihealue FROM a_aihealue WHERE ID = ".$z.";");
+				$aihe->execute();
+				$aihe_data = $aihe->fetch();
+				echo('<div class="aihe_'.$z.'">
+						<a href="#">'.$aihe_data["aihealue"].'</a>
+					</div>'
+					);
+				};
+			?>
 		</div>
 	<div class="searchbar">
 		<input type="text" name="search" placeholder="Search... " />

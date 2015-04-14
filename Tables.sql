@@ -70,3 +70,7 @@ CREATE TABLE a_kommentti(
 	FOREIGN KEY(julkaisu) REFERENCES a_julkaisu(ID)
 )DEFAULT CHARSET=utf8 AUTO_INCREMENT=4000 ;
 
+ALTER TABLE a_julkaisu ADD aihealue INT;
+ALTER TABLE a_julkaisu ADD FOREIGN KEY (aihealue) REFERENCES a_aihealue(ID);
+
+INSERT INTO a_aihealue (aihealue) VALUES (Yleinen),(Urheilu),(Ruoka),(Musiikki);
