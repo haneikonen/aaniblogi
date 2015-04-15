@@ -61,21 +61,5 @@ $STH3 = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE 
 $STH3->execute();
 $row_kolmas = $STH3->fetch();
 
-		// Haetaan suosituimpien julkaisujen kommentit
-$STH_kommentit1 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[0].";");
-$STH_kommentit1->execute();
-if($STH_kommentit1->num_rows > 0){
-	echo('<br> </br>');
-	while($kommentit_eka = $STH_kommentit1-> fetch_assoc()){
-		echo("<br>".$kommentit_eka['kommentti']."</br>");
-		}
-	}
 
-$STH_kommentit2 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[1].";");
-$STH_kommentit2->execute();
-$kommentit_toka = $STH_kommentit2->fetch();
-
-$STH_kommentit3 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[2].";");
-$STH_kommentit3->execute();
-$kommentit_kolmas = $STH_kommentit3->fetch();	
 ?>
