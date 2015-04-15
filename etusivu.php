@@ -7,7 +7,7 @@ require_once('yhteiset/dbFunctions.php');
 
 SSLon();
 ?>
-<?php include 'php/log_in.php' ?>
+<?php include 'log_in.php' ?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -52,25 +52,28 @@ SSLon();
 	$("#loggaus").replaceWith('<a href="<?php echo $_SERVER[´PHP_SELF´]; ?>?action=logout">Logout	</a>');
     </script>
 <?php endif; ?>
-	<div class="aiheet_nav">
-		<div class="aihe_1">
-			aihe1
-			</div>
-		<div class="aihe_2">
-			aihe2
-			</div>
-		<div class="aihe_3">
-			aihe3
-			</div>
-		<div class="aihe_4">
-			aihe4
-			</div>
-		</div>
+<div class="aiheet_nav">
+	<?php 
+		$aihelkm=$DBH->prepare("SELECT COUNT(ID) FROM a_aihealue WHERE ID;");
+		$aihelkm->execute();
+		$aihelkm_data = $aihelkm->fetch();
+
+		for($z=1;$z <=$aihelkm_data['COUNT(ID)'];$z++){
+			$aihe= $DBH->prepare("SELECT aihealue FROM a_aihealue WHERE ID = ".$z.";");
+			$aihe->execute();
+			$aihe_data = $aihe->fetch();
+			echo('<div class="aihe_'.$z.'">
+					<a href="#">'.$aihe_data["aihealue"].'</a>
+				</div>'
+				);
+		};
+	?>
+</div>
 	<div class="searchbar">
 		<input type="text" name="search" placeholder="Search... " />
      	<input type="submit" name="go" value="Go" class="button" />
 	 </div>
-<?php include 'php/kommentti_haku.php' ?>
+<?php include 'kommentti_haku.php' ?>
 	 
 	<div class="keskustelut">
 		<div class="kesk_1_1">
@@ -163,9 +166,9 @@ SSLon();
         	</div>
             <!-- Lisätään julkaisujen tiedot niiden paikoilleen-->
         <script>
-        	$(".sisalto_1").append('<?php include 'php/kommentti_1.php' ?>');
-        	$(".sisalto_2").append('<?php include 'php/kommentti_2.php' ?>');
-        	$(".sisalto_3").append('<?php include 'php/kommentti_3.php' ?>');
+        	$(".sisalto_1").append('<?php include 'kommentti_1.php' ?>');
+        	$(".sisalto_2").append('<?php include 'kommentti_2.php' ?>');
+        	$(".sisalto_3").append('<?php include 'kommentti_3.php' ?>');
 			$("#title_kesk_1_1").append('<?php echo($row_eka['title']); ?>');
 			$("#kuvaus1").append('<?php echo($row_eka['kuvaus']); ?>');
 			$("#title_kesk_1_2").append('<?php echo($row_toka['title']); ?>');
@@ -188,8 +191,7 @@ SSLon();
         	$(".sisalto_2").hide();
         	$(".sisalto_3").hide();
 			</script>
-			<?php endif ?>
-        
+			<?php endif ?>       
 	</div>
 		<div class="kesk_2_1">
 			<iframe width="380" height="214" src="https://www.youtube.com/embed/RVB7uSPr4Ns" frameborder="0" allowfullscreen></iframe>

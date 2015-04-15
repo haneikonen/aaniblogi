@@ -10,7 +10,8 @@ if(!empty($_POST['username'])&&!empty($_POST['pwd'])){
 		$_SESSION['kirjautunut'] = 'loggedIn';
 		$userInfoSql=("
 			SELECT
-				u.userID
+				u.userID,
+				u.username
 			FROM
 				a_kayttaja u
 			WHERE
@@ -24,6 +25,7 @@ if(!empty($_POST['username'])&&!empty($_POST['pwd'])){
 try{
 	while($row=$STH->fetch()){
 		$_SESSION['user']=$row['userID'];   //KÄYTTÄJÄN ID SESSIOTA VARTEN MUUTTUJASSA $_SESSION['user']
+		$_SESSION['username']=$row['username'];
 		//echo($_SESSION['user']);			// JOKAISELLE SIVULLE LAITETTAVA session_start(); ALKUUN ETTÄ TOIMII^^
 	}
 }catch(PDOException $e){
@@ -45,7 +47,7 @@ if($_GET['action'] == 'logout'){
 if ($_SESSION['kirjautunut'] == 'loggedIn'):
 ?>
 	<a href="<?php echo $_SERVER['PHP_SELF']; ?>?action=logout">Logout</a>
-	<p>Username: <?php echo $_POST['username'] ?> </p>
+	<p>Username: <?php echo $_SESSION['username']; ?> </p>
 	<?php require_once('julkaisu.php');	
 endif;
 ?>
