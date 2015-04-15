@@ -96,21 +96,18 @@ if($_GET['action'] == 'logout'){
 endif;
 ?>
 	<div class="aiheet_nav">
-		<?php 
-			$aihelkm=$DBH->prepare("SELECT COUNT(ID) FROM a_aihealue WHERE ID;");
-			$aihelkm->execute();
-			$aihelkm_data = $aihelkm->fetch();
-
-			for($z=1;$z <=$aihelkm_data['COUNT(ID)'];$z++){
-				$aihe= $DBH->prepare("SELECT aihealue FROM a_aihealue WHERE ID = ".$z.";");
-				$aihe->execute();
-				$aihe_data = $aihe->fetch();
-				echo('<div class="aihe_'.$z.'">
-						<a href="#">'.$aihe_data["aihealue"].'</a>
-					</div>'
-					);
-				};
-			?>
+		<div class="aihe_1">
+			aihe1
+			</div>
+		<div class="aihe_2">
+			aihe2
+			</div>
+		<div class="aihe_3">
+			aihe3
+			</div>
+		<div class="aihe_4">
+			aihe4
+			</div>
 		</div>
 	<div class="searchbar">
 		<input type="text" name="search" placeholder="Search... " />
@@ -178,7 +175,24 @@ $popular_max = [];
 			$STH3 = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE ID = ".$mostPopularID[2].";");
 			$STH3->execute();
 			$row_kolmas = $STH3->fetch();
-	
+			
+					// Haetaan suosituimpien julkaisujen kommentit
+			$STH_kommentit1 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[0].";");
+			$STH_kommentit1->execute();
+			if($STH_kommentit1->num_rows > 0){
+				echo('<br> </br>');
+				while($kommentit_eka = $STH_kommentit1-> fetch_assoc()){
+					echo("<br>".$kommentit_eka['kommentti']."</br>");
+					}
+				}
+
+			$STH_kommentit2 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[1].";");
+			$STH_kommentit2->execute();
+			$kommentit_toka = $STH_kommentit2->fetch();
+			
+			$STH_kommentit3 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[2].";");
+			$STH_kommentit3->execute();
+			$kommentit_kolmas = $STH_kommentit3->fetch();	
 			?>
 	 
 	<div class="keskustelut">
@@ -277,9 +291,57 @@ Additionaly it provides some tools useful in real-life cases. Such as the abilit
 			</div>
             <!-- Lisätään julkaisujen tiedot niiden paikoilleen-->
         <script>
-        	$(".sisalto_1").append('<?php echo($row_eka['sisalto']); ?>');
-        	$(".sisalto_2").append('<?php echo($row_toka['sisalto']); ?>');
-        	$(".sisalto_3").append('<?php echo($row_kolmas['sisalto']); ?>');
+        	$(".sisalto_1").append('<?php 
+				$count = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$mostPopularID[0].";");
+				$count->execute();
+				$count_data = $count->fetch();
+				$cnt_rows = $count_data['COUNT(julkaisu)'];
+				
+				$sql = "SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[0].";";
+				$result = $DBH->query($sql);				
+				if($cnt_rows > 0){
+					for($i = 1; $i < $cnt_rows; $i++){
+						$row = $result-> fetch();
+						echo('<br><td>'.$row['kommentti'].'</td></br>');
+						}
+					} else{
+						echo('no comments');
+					}
+					?>');
+        	$(".sisalto_2").append('<?php 
+				$count = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$mostPopularID[1].";");
+				$count->execute();
+				$count_data = $count->fetch();
+				$cnt_rows = $count_data['COUNT(julkaisu)'];
+				
+				$sql = "SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[1].";";
+				$result = $DBH->query($sql);				
+				if($cnt_rows > 0){
+					for($i = 1; $i < $cnt_rows; $i++){
+						$row = $result-> fetch();
+						echo('<br><td>'.$row['kommentti'].'</td></br>');
+						}
+					} else{
+						echo('No comments');
+					}
+					?>');
+        	$(".sisalto_3").append('<?php 
+				$count = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$mostPopularID[3].";");
+				$count->execute();
+				$count_data = $count->fetch();
+				$cnt_rows = $count_data['COUNT(julkaisu)'];
+				
+				$sql = "SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[3].";";
+				$result = $DBH->query($sql);				
+				if($cnt_rows > 0){
+					for($i = 1; $i < $cnt_rows; $i++){
+						$row = $result-> fetch();
+						echo('<br><td>'.$row['kommentti'].'</td></br>'.$mostPopularID[2]);
+						}
+					} else{
+						echo('No comments');
+					}
+					?>');
 			$("#title_kesk_1_1").append('<?php echo($row_eka['title']); ?>');
 			$("#kuvaus1").append('<?php echo($row_eka['kuvaus']); ?>');
 			$("#title_kesk_1_2").append('<?php echo($row_toka['title']); ?>');
@@ -292,15 +354,15 @@ Additionaly it provides some tools useful in real-life cases. Such as the abilit
 			if ($_SESSION['kirjautunut'] == 'loggedIn'):
 		    ?>
             <script>
-			$("#sisalto1").show();
-        	$("#sisalto2").show();
-        	$("#sisalto3").show();
+			$("#sisalto_1").show();
+        	$("#sisalto_2").show();
+        	$("#sisalto_3").show();
 		 	</script>
 			<?php else: ?>
 			<script>
-			$("#sisalto1").hide();
-        	$("#sisalto2").hide();
-        	$("#sisalto3").hide();
+			$(".sisalto_1").hide();
+        	$(".sisalto_2").hide();
+        	$(".sisalto_3").hide();
 			</script>
 			<?php endif ?>
         
@@ -319,6 +381,7 @@ Additionaly it provides some tools useful in real-life cases. Such as the abilit
 		tamasivu on luotu huonosti http//:::ok.web.ko
 		</div>
 </div>
+<?php echo($mostPopularID[0]) ?>
 </body></html>
 
 
