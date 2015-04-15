@@ -7,43 +7,7 @@ require_once('yhteiset/dbFunctions.php');
 
 SSLon();
 ?>
-<?php
-//Login -> $_SESSION['kirjautunut']='loggedIn'	
-if(!empty($_POST['username'])&&!empty($_POST['pwd'])){
-	if(check_user($_POST['username'], $_POST['pwd'], $DBH)){
-		$_SESSION['kirjautunut'] = 'loggedIn';
-		$userInfoSql=("
-			SELECT
-				u.userID
-			FROM
-				a_kayttaja u
-			WHERE
-				u.username='".$_POST['username']."'"
-			);
-	//echo("UINFO SQUEEL".$userInfoSql);
-	
-		$STH=$DBH->query($userInfoSql);
-	$STH->setFetchMode(PDO::FETCH_ASSOC);
-try{
-	while($row=$STH->fetch()){
-		$_SESSION['user']=$row['userID'];   //KÄYTTÄJÄN ID SESSIOTA VARTEN MUUTTUJASSA $_SESSION['user']
-		//echo($_SESSION['user']);			// JOKAISELLE SIVULLE LAITETTAVA session_start(); ALKUUN ETTÄ TOIMII^^
-	}
-}catch(PDOException $e){
-	echo "Jotain meni pieleen :(";
-	file_put_contents('../../loki/PDOErrors.txt', $e->getMessage()."\n",FILE_APPEND);
-}
-	} else {
-		echo '<script>alert("Login Failure");</script>';
-	}
-}
-//Logout session_destroy();
-if($_GET['action'] == 'logout'){
-	unset($_SESSION['kirjautunut']);
-	session_destroy();
-}
-//Tarkastetaan sisäänkirjatuminen, jos inessä näytetään "Logout"
-		  ?>
+<?php include 'php/log_in.php' ?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -81,20 +45,13 @@ if($_GET['action'] == 'logout'){
 				<input type="password" name="pwd" placeholder="password" id="pwd"/>
 				<input type="submit" name="kirjaudu" value="Login" class="button" id="loggaus" />
 			</div>
-<?php if ($_SESSION['kirjautunut'] == 'loggedIn'):
-	?>
+<?php if ($_SESSION['kirjautunut'] == 'loggedIn'):	?>
 	<script>
 	$("#user").hide();
 	$("#pwd").hide();
 	$("#loggaus").replaceWith('<a href="<?php echo $_SERVER[´PHP_SELF´]; ?>?action=logout">Logout	</a>');
     </script>
-
-
-
-<?php
-// lopeta if
-endif;
-?>
+<?php endif; ?>
 	<div class="aiheet_nav">
 		<div class="aihe_1">
 			aihe1
@@ -113,87 +70,7 @@ endif;
 		<input type="text" name="search" placeholder="Search... " />
      	<input type="submit" name="go" value="Go" class="button" />
 	 </div>
-			<?php
-			
-			$popular_max=[];
-			
-					// Suosituimpien julkaisujen selvitys
-					
-							// Selvitetään montako julkaisua meillä on
-	
-			$lkm = $DBH->prepare("SELECT COUNT(ID) FROM a_julkaisu WHERE ID;");
-			$lkm->execute();
-			$lkm_data = $lkm->fetch();
-
-
-							
-$mostPopularID = [];
-$vertaus[0] = 0;
-$popular_max = [];
-
-					// Selvitetään kuinka monta kommenttia kussakin julkaisussa
-							
-			for ($i = 0; $i < $lkm_data['COUNT(ID)']; $i++) {
-				$popularity = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$i.";");
-				$popularity->execute();
-				$popularity_data = $popularity->fetch();
-				$mostPopularID[$i-1] = $i;
-			 	$popular_max[$i-1] = intval($popularity_data['COUNT(julkaisu)']) ;	
-					// päivitetään postilaskuri				
-				$update = $DBH->prepare("UPDATE a_julkaisu SET postilaskuri = ".$popular_max[$i-1]." WHERE ID = ".$i.";");
-				$update->execute();
-			}
-						//Järjesteetään popular max array suurimmasta pienimpään
-			rsort($popular_max);
-			
-				// Laitetaan julkaisut järjestykseen suosimmuuden mukaan
-						
-			for($i = 1; $i < $lkm_data['COUNT(ID)']; $i++){
-
-				
-				
-				$id = $DBH->prepare("SELECT ID FROM a_julkaisu WHERE postilaskuri = ".$popular_max[$i-1].";");
-				$id->execute();
-				$id_data = $id->fetch();
-				$mostPopularID[$i-1] = intval($id_data['ID']); 
-					}			
-					
-
-				
-
-
-							// Haetaan julkaisujen tiedot
-			
-			$STH = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE 	ID = ".$mostPopularID[0].";");
-			$STH->execute();
-			$row_eka = $STH->fetch();
-			
-			$STH2 = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE ID =	".$mostPopularID[1].";");
-			$STH2->execute();
-			$row_toka = $STH2->fetch();
-			
-			$STH3 = $DBH->prepare("SELECT title, sisalto, kuvaus, url FROM a_julkaisu WHERE ID = ".$mostPopularID[2].";");
-			$STH3->execute();
-			$row_kolmas = $STH3->fetch();
-			
-					// Haetaan suosituimpien julkaisujen kommentit
-			$STH_kommentit1 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[0].";");
-			$STH_kommentit1->execute();
-			if($STH_kommentit1->num_rows > 0){
-				echo('<br> </br>');
-				while($kommentit_eka = $STH_kommentit1-> fetch_assoc()){
-					echo("<br>".$kommentit_eka['kommentti']."</br>");
-					}
-				}
-
-			$STH_kommentit2 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[1].";");
-			$STH_kommentit2->execute();
-			$kommentit_toka = $STH_kommentit2->fetch();
-			
-			$STH_kommentit3 = $DBH->prepare("SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[2].";");
-			$STH_kommentit3->execute();
-			$kommentit_kolmas = $STH_kommentit3->fetch();	
-			?>
+<?php include 'php/kommentti_haku.php' ?>
 	 
 	<div class="keskustelut">
 		<div class="kesk_1_1">
@@ -227,8 +104,6 @@ $popular_max = [];
         </div>
         <div class="kesk_1_2">
         <h2 id="title_kesk_1_2"></h2>
-		Additionaly it provides some tools useful in real-life cases. Such as the ability for the user to mute the sound. Its is useful when the user is at the office or any place where it isn't polite to have a loud computer :) 
-
 		<audio id="myAudio2" class="video-js vjs-default-skin"></audio>
 
 		<script>
@@ -285,63 +160,12 @@ $popular_max = [];
 		</script>
 		<h3 id="kuvaus3"></h3>
    		<div class="sisalto_3"></div>
-        This helper provides a main line out with the good practices from "Developing Game Audio with the Web Audio API" on html5rocks. So it provides a clipping detection and a dynamic compressor to reduce clipping to improve sound quality.
-
-Additionaly it provides some tools useful in real-life cases. Such as the ability for the user to mute the sound. Its is useful when the user is at the office or any place where it isn't polite to have a loud computer :) 
-			</div>
+        	</div>
             <!-- Lisätään julkaisujen tiedot niiden paikoilleen-->
         <script>
-        	$(".sisalto_1").append('<?php 
-				$count = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$mostPopularID[0].";");
-				$count->execute();
-				$count_data = $count->fetch();
-				$cnt_rows = $count_data['COUNT(julkaisu)'];
-				
-				$sql = "SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[0].";";
-				$result = $DBH->query($sql);				
-				if($cnt_rows > 0){
-					for($i = 1; $i < $cnt_rows; $i++){
-						$row = $result-> fetch();
-						echo('<br><td>'.$row['kommentti'].'</td></br>');
-						}
-					} else{
-						echo('no comments');
-					}
-					?>');
-        	$(".sisalto_2").append('<?php 
-				$count = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$mostPopularID[1].";");
-				$count->execute();
-				$count_data = $count->fetch();
-				$cnt_rows = $count_data['COUNT(julkaisu)'];
-				
-				$sql = "SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[1].";";
-				$result = $DBH->query($sql);				
-				if($cnt_rows > 0){
-					for($i = 1; $i < $cnt_rows; $i++){
-						$row = $result-> fetch();
-						echo('<br><td>'.$row['kommentti'].'</td></br>');
-						}
-					} else{
-						echo('No comments');
-					}
-					?>');
-        	$(".sisalto_3").append('<?php 
-				$count = $DBH->prepare("SELECT COUNT(julkaisu) FROM a_kommentti WHERE julkaisu = ".$mostPopularID[3].";");
-				$count->execute();
-				$count_data = $count->fetch();
-				$cnt_rows = $count_data['COUNT(julkaisu)'];
-				
-				$sql = "SELECT user_ID, kommentti, audio FROM a_kommentti WHERE julkaisu = ".$mostPopularID[3].";";
-				$result = $DBH->query($sql);				
-				if($cnt_rows > 0){
-					for($i = 1; $i < $cnt_rows; $i++){
-						$row = $result-> fetch();
-						echo('<br><td>'.$row['kommentti'].'</td></br>'.$mostPopularID[2]);
-						}
-					} else{
-						echo('No comments');
-					}
-					?>');
+        	$(".sisalto_1").append('<?php include 'php/kommentti_1.php' ?>');
+        	$(".sisalto_2").append('<?php include 'php/kommentti_2.php' ?>');
+        	$(".sisalto_3").append('<?php include 'php/kommentti_3.php' ?>');
 			$("#title_kesk_1_1").append('<?php echo($row_eka['title']); ?>');
 			$("#kuvaus1").append('<?php echo($row_eka['kuvaus']); ?>');
 			$("#title_kesk_1_2").append('<?php echo($row_toka['title']); ?>');
@@ -381,7 +205,6 @@ Additionaly it provides some tools useful in real-life cases. Such as the abilit
 		tamasivu on luotu huonosti http//:::ok.web.ko
 		</div>
 </div>
-<?php echo($mostPopularID[0]) ?>
 </body></html>
 
 
