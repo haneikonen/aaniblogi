@@ -7,7 +7,7 @@ require_once('yhteiset/dbFunctions.php');
 
 SSLon();
 ?>
-<?php include 'log_in.php' ?>
+<?php /* include 'log_in.php' */?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -23,7 +23,10 @@ SSLon();
 		<script src="js/wavesurfer.min.js"></script>
 		<script src="js/videojs.wavesurfer.js"></script>
 		<script src="js/funktioita.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>    </head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> 
+		<script src="keskusteluhaku.js"></script>
+		<script src="kommenttihaku.js"></script>
+		</head>
 <body>
 
 <div class="top">
@@ -40,11 +43,16 @@ SSLon();
 				</h1>
 			</div>
 		<div class="login" id="login">
+		<?php  include 'log_in.php' ?>
+		<!--
 				<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     			<input type="text" name="username" placeholder="username" id="user"/>
 				<input type="password" name="pwd" placeholder="password" id="pwd"/>
 				<input type="submit" name="kirjaudu" value="Login" class="button" id="loggaus" />
+				
+				-->
 			</div>
+			
 <?php if ($_SESSION['kirjautunut'] == 'loggedIn'):	?>
 	<script>
 	$("#user").hide();
@@ -63,9 +71,11 @@ SSLon();
 			$aihe->execute();
 			$aihe_data = $aihe->fetch();
 			echo('<div class="aihe_'.$z.'">
-					<a href="#">'.$aihe_data["aihealue"].'</a>
+					<a href="#" id="aihe'.$z.'">'.$aihe_data["aihealue"].'</a>
 				</div>'
+
 				);
+	
 		};
 	?>
 </div>
@@ -74,7 +84,9 @@ SSLon();
      	<input type="submit" name="go" value="Go" class="button" />
 	 </div>
 <?php include 'kommentti_haku.php' ?>
-	 
+	<div>
+	<p id="keskustelulista">HEI</p>
+	</div>
 	<div class="keskustelut">
 		<div class="kesk_1_1">
         	<h2 id="title_kesk_1_1"></h2>
@@ -206,7 +218,33 @@ SSLon();
 	<div class="bottom">
 		tamasivu on luotu huonosti http//:::ok.web.ko
 		</div>
+		<div id="kommenttilista">
+		</div>
 </div>
+<script>
+	$('#aihe1').click(function(){haeAihe(1);});
+	$('#aihe2').click(function(){haeAihe(2);});
+	$('#aihe3').click(function(){haeAihe(3);});
+	$('#aihe4').click(function(){haeAihe(4);});
+	$('.comment').click(function(){
+		haeKommentti();
+		console.log("kala-animationsd");
+		/*function haeAihe(g){
+			$('#kommenttilista').text('');
+			var aiheID=g;
+
+			$.ajax({
+				type: "POST",
+				url: "kommentit.php",
+				data: 'komma='+aiheID,
+				success:function(data){
+					var d=data;
+					$('#kommenttilista').append(d);
+				}
+			});	
+		}*/
+	});
+</script>
 </body></html>
 
 
