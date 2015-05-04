@@ -3,13 +3,14 @@
 //javascriptin puolella erikseen
 
 require_once('yhteiset/dbYhteys.php');
-$k=$_POST['q'];
-//$k=1;
+//$k=$_POST['q'];
+$k=1;
 $kommenttilista=
 "SELECT
  a.kommentti,
  a.audio,
- k.username 
+ k.username,
+ a.posted
 FROM
  a_kommentti a,
  a_kayttaja k
@@ -26,7 +27,7 @@ $kommentit["comments"]=[];
 
 try{
 	while($row=$STH->fetch()){
-		$kommentti=array('username'=>$row['username'],'audio'=>$row['audio'],'kommentti'=>$row['kommentti']);
+		$kommentti=array('username'=>$row['username'],'audio'=>$row['audio'],'kommentti'=>$row['kommentti'],'time'=>date('G:i j.n.Y',strtotime($row['posted'])));
 		array_push($kommentit["comments"],$kommentti);
 	}
 	echo(json_encode($kommentit));
