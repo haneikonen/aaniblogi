@@ -1,5 +1,5 @@
 <?php
-require_once('yhteiset/dbYhteys.php');
+require_once('../yhteiset/dbYhteys.php');
 $z=$_POST['q'];
 
 //$z=1;
@@ -9,7 +9,8 @@ $keskustelut=[];
 $keskustelulista=
 "SELECT 
 	j.title,
-	j.ID
+	j.ID,
+	j.url
 FROM 
 	a_julkaisu j
 WHERE 
