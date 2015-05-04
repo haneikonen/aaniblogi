@@ -2,7 +2,7 @@
 //JSON_ENCODE -> voidaan erotella käyttäjä, kommentti ja audio-urli
 //javascriptin puolella erikseen
 
-require_once('yhteiset/dbYhteys.php');
+require_once('../yhteiset/dbYhteys.php');
 //$k=$_POST['q'];
 $k=1;
 $kommenttilista=
@@ -10,10 +10,12 @@ $kommenttilista=
  a.kommentti,
  a.audio,
  k.username,
- a.posted
+ a.posted,
+ j.url
 FROM
  a_kommentti a,
- a_kayttaja k
+ a_kayttaja k,
+ a_julkaisu j
 WHERE
  a.julkaisu=".$k." AND
  a.user_ID=k.userID;";
@@ -27,7 +29,7 @@ $kommentit["comments"]=[];
 
 try{
 	while($row=$STH->fetch()){
-		$kommentti=array('username'=>$row['username'],'audio'=>$row['audio'],'kommentti'=>$row['kommentti'],'time'=>date('G:i j.n.Y',strtotime($row['posted'])));
+		$kommentti=array('username'=>$row['username'],'audio'=>$row['audio'],'url'=>$row['url'],'kommentti'=>$row['kommentti'],'time'=>date('G:i j.n.Y',strtotime($row['posted'])));
 		array_push($kommentit["comments"],$kommentti);
 	}
 	echo(json_encode($kommentit));
