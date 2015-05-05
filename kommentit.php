@@ -3,19 +3,17 @@
 //javascriptin puolella erikseen
 
 require_once('../yhteiset/dbYhteys.php');
-//$k=$_POST['q'];
-$k=1;
+$k=$_POST['q'];
+//$k=1;
 $kommenttilista=
 "SELECT
  a.kommentti,
  a.audio,
  k.username,
- a.posted,
- j.url
+ a.posted
 FROM
  a_kommentti a,
- a_kayttaja k,
- a_julkaisu j
+ a_kayttaja k
 WHERE
  a.julkaisu=".$k." AND
  a.user_ID=k.userID;";

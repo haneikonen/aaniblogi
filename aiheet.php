@@ -21,11 +21,23 @@ SSLon();
 		<script src="js/funktioita.js"></script>
 		<script src="js/kommenttihaku.js"></script>
 		<script src="js/keskusteluhaku.js"></script>
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> 
 		<title>Foundation 5</title>
   		<link href="assets/css/foundation.min.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="assets/css/etusivu.min.css" rel="stylesheet" type="text/css" media="all" />
   		<script src="bower_components/modernizr/modernizr.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		  		<script src="bower_components/modernizr/modernizr.js"></script>
+		<script src="js/recorder.js"></script>
+		<script src="js/jquery.voice.js"></script>
+		<script src="js/record.js"></script>
+		<title>Foundation 5</title>
+  		<link href="assets/css/foundation.min.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="assets/css/etusivu.min.css" rel="stylesheet" type="text/css" media="all" />
+
+
 	</head>
 	<body>
 		
@@ -42,7 +54,7 @@ SSLon();
     <!-- Right Nav Section -->
     <ul class="right">
       <li class="has-dropdown">
-        <a href="#">Kirjaudu sis��n</a>
+        <a href="#">Kirjaudu sisään</a>
         <ul class="dropdown">
           <li><a href="#">First link in dropdown</a></li>
           <li class="active"><a href="#">Active link in dropdown</a></li>
@@ -79,7 +91,9 @@ $.ajax({
 			linkki='<p id="link'+k.id+'">'+k.title+'</p>';
 			$('#keskustelulista').append(linkki);
 			$('#link'+k.id).click(function(){
+
 			haeKommentti(k.id)
+
 			$('#julkaisu').append('<p>'+k.url+'</p>');
 			})
 		})
@@ -98,6 +112,7 @@ function haeKommentti(julkId){
 			success:function(data){
 				data.comments.forEach(function(c){
 					var kommentti='<div class="comment">'+
+					'<p class="time">'+c.time+'</p>'+
 					'<p class="kommentti-uname">'+c.username+'</p>'+
 					'<p class="audio">'+c.audio+'</p>'+
 					'<p class="comment-text">'+c.kommentti+'</p>'+
@@ -149,6 +164,106 @@ function haeKommentti(julkId){
 			<div class="panel">
 				<div id="julkaisu">
 				<h3> Julkaisu </h3>
+				</div>			
+				<div>
+				<button onclick="startRecording(this);">Record</button>
+				<button onclick="stopRecording(this);">Stop</button>
+				<h2>Log</h2>
+				<ul id="recordingslist"></ul>
+				<pre id="log"></pre>
+				  <script>
+				  console.log("https://subinsb.com/html5-record-mic-voice");
+  
+  function __log(e, data) {
+    log.innerHTML += "\n" + e + " " + (data || '');
+  }
+
+  var audio_context;
+  var recorder;
+
+  function startUserMedia(stream) {
+    var input = audio_context.createMediaStreamSource(stream);
+    __log('Media stream created.');
+
+    // Uncomment if you want the audio to feedback directly
+    //input.connect(audio_context.destination);
+    //__log('Input connected to audio context destination.');
+    
+    recorder = new Recorder(input);
+    __log('Recorder initialised.');
+  }
+
+  function startRecording(button) {
+    recorder && recorder.record();
+    button.disabled = true;
+    button.nextElementSibling.disabled = false;
+    __log('Recording...');
+  }
+
+  function stopRecording(button) {
+    recorder && recorder.stop();
+    button.disabled = true;
+    button.previousElementSibling.disabled = false;
+    __log('Stopped recording.');
+    
+    // create WAV download link using audio data blob
+    createDownloadLink();
+    
+    recorder.clear();
+  }
+
+
+  function createDownloadLink() {
+    recorder && recorder.exportWAV(function(blob) {
+      var url = URL.createObjectURL(blob);
+	  console.log(blob);
+	  
+	  //EI TOIMI
+	  /*
+	$.post(
+		'php/addAudio.php',
+		{
+			audio:blob,
+			julkaisu:1
+		}
+	);
+	  */
+      var li = document.createElement('li');
+      var au = document.createElement('audio');
+      var hf = document.createElement('a');
+      
+      au.controls = true;
+      au.src = url;
+      hf.href = url;
+      hf.download = new Date().toISOString() + '.wav';
+      hf.innerHTML = hf.download;
+      li.appendChild(au);
+      li.appendChild(hf);
+      recordingslist.appendChild(li);
+    });
+  }
+
+  window.onload = function init() {
+    try {
+      // webkit shim
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+      window.URL = window.URL || window.webkitURL;
+      
+      audio_context = new AudioContext;
+      __log('Audio context set up.');
+      __log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+    } catch (e) {
+      alert('No web audio support in this browser!');
+    }
+    
+    navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+      __log('No live audio input: ' + e);
+    });
+  };
+  </script>
+			
+				
 				</div>
 			</div>
 		</div>
@@ -163,6 +278,7 @@ function haeKommentti(julkId){
   		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="assets/js/foundation.min.js"></script>
 <script>
+
 $(document).foundation();
 </script>
 
