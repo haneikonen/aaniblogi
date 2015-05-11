@@ -63,17 +63,23 @@ SSLon();
     </ul>
     <!-- Left Nav Section -->
     <ul class="left">
-      <li><a href="aiheet.html">Viihde</a></li>
-      <li><a href="aiheet.html">Musiikki</a></li>
-      <li><a href="aiheet.html">Elokuvat</a></li>
-      <li><a href="aiheet.html">Ruoka</a></li>
+      <li><a class="aihelink" href="q=1">Viihde</a></li>
+      <li><a class="aihelink" href="q=2">Musiikki</a></li>
+      <li><a class="aihelink" href="q=3">Elokuvat</a></li>
+      <li><a class="aihelink" href="q=3">Ruoka</a></li>
     </ul>
   </section>
 </nav>
 </div>
 <div class="row" data-equalizer>
 	<script>
-
+$('.aihelink').click(function(event){
+		event.preventDefault();
+		console.log(this.href.replace("https://users.metropolia.fi/~hannui/aani3git/aaniblogi/q=",""));
+		haeAihe(this.href.replace("https://users.metropolia.fi/~hannui/aani3git/aaniblogi/q=",""));
+	})
+	
+	
 function haeAihe(id){
 	console.log('Voi perse');
 $('#keskustelulista').text('');
@@ -215,31 +221,40 @@ function haeKommentti(julkId){
 
   function createDownloadLink() {
     recorder && recorder.exportWAV(function(blob) {
-      var url = URL.createObjectURL(blob);
+      var urlVoi = URL.createObjectURL(blob);
 	  console.log(blob);
+	  console.log(urlVoi);
+	  var data =new FormData();
+	  data.append('file',blob);
+	  console.log(data);
+	  $.ajax({
+		url:"php/uploadvoice.php",
+		type:'POST',
+		data:data,
+		contentType: false,
+        processData: false,
+        success: function(data) {
+          alert(data);
+        },    
+        error: function() {
+          alert("not so boa!");
+        }
+      });
+	 
 	  
-	  //EI TOIMI
-	  /*
-	$.post(
-		'php/addAudio.php',
-		{
-			audio:blob,
-			julkaisu:1
-		}
-	);
-	  */
       var li = document.createElement('li');
       var au = document.createElement('audio');
       var hf = document.createElement('a');
       
       au.controls = true;
-      au.src = url;
-      hf.href = url;
+      au.src = urlVoi;
+      hf.href = urlVoi;
       hf.download = new Date().toISOString() + '.wav';
       hf.innerHTML = hf.download;
       li.appendChild(au);
       li.appendChild(hf);
       recordingslist.appendChild(li);
+	  //recordingslist.appendChild(uploadb);
     });
   }
 
@@ -279,7 +294,7 @@ function haeKommentti(julkId){
 <script src="assets/js/foundation.min.js"></script>
 <script>
 
-$(document).foundation();
+//$(document).foundation();
 </script>
 
 	</body>
