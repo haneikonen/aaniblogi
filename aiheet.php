@@ -66,7 +66,7 @@ SSLon();
       <li><a class="aihelink" href="q=1">Viihde</a></li>
       <li><a class="aihelink" href="q=2">Musiikki</a></li>
       <li><a class="aihelink" href="q=3">Elokuvat</a></li>
-      <li><a class="aihelink" href="q=3">Ruoka</a></li>
+      <li><a class="aihelink" href="q=4">Ruoka</a></li>
     </ul>
   </section>
 </nav>
@@ -75,16 +75,17 @@ SSLon();
 	<script>
 $('.aihelink').click(function(event){
 		event.preventDefault();
-		console.log(this.href.replace("https://users.metropolia.fi/~hannui/aani3git/aaniblogi/q=",""));
-		haeAihe(this.href.replace("https://users.metropolia.fi/~hannui/aani3git/aaniblogi/q=",""));
+		//KORJAA linkki alta vvvvvvvv    kaikki mita on ennen aiheet.php, niin et consoleloggaa pelkan numeron
+		console.log(this.href.replace("https://users.metropolia.fi/~hannui/Aaniblogi/q=",""));
+		haeAihe(this.href.replace("https://users.metropolia.fi/~hannui/Aaniblogi/q=",""));
 	})
 	
-	
+	var aiheID=0;
 function haeAihe(id){
 	console.log('Voi perse');
 $('#keskustelulista').text('');
 $('#kommenttilista').text('');
-var aiheID=id;
+aiheID=id;
 $.ajax({
 	type: "POST",
 	url: "php/keskustelut.php",
@@ -100,7 +101,7 @@ $.ajax({
 
 			haeKommentti(k.id)
 
-			$('#julkaisu').append('<p>'+k.url+'</p>');
+			$('#julkaisu').append('<audio src='+k.url+'></audio>');
 			})
 		})
 	}
@@ -120,7 +121,8 @@ function haeKommentti(julkId){
 					var kommentti='<div class="comment">'+
 					'<p class="time">'+c.time+'</p>'+
 					'<p class="kommentti-uname">'+c.username+'</p>'+
-					'<p class="audio">'+c.audio+'</p>'+
+					//KORJAA audio url vvvvvvvvv
+					'<audio class="audio" src="'+c.audio+'"></audio>'+
 					'<p class="comment-text">'+c.kommentti+'</p>'+
 					'</div>';
 					$('#kommenttilista').append(kommentti);
@@ -218,29 +220,15 @@ function haeKommentti(julkId){
     recorder.clear();
   }
 
-
+var data;
   function createDownloadLink() {
     recorder && recorder.exportWAV(function(blob) {
       var urlVoi = URL.createObjectURL(blob);
 	  console.log(blob);
 	  console.log(urlVoi);
-	  var data =new FormData();
+	  data =new FormData();
 	  data.append('file',blob);
 	  console.log(data);
-	  $.ajax({
-		url:"php/uploadvoice.php",
-		type:'POST',
-		data:data,
-		contentType: false,
-        processData: false,
-        success: function(data) {
-          alert(data);
-        },    
-        error: function() {
-          alert("not so boa!");
-        }
-      });
-	 
 	  
       var li = document.createElement('li');
       var au = document.createElement('audio');
@@ -277,8 +265,36 @@ function haeKommentti(julkId){
     });
   };
   </script>
-			
-				
+  <form action="" method="post" enctype="multipart/form-data">
+	<input type="text" name="title" id="formtitle" placeholder="Julkaisun nimi" />
+	<input type="text" name="kuvaus" id="formkuvaus" placeholder="Kuvaile julkaisuasi" />
+	<input type="text" name="sisalto" id="formsisalto" placeholder="Kerro julkaisustasi" />
+    <input type="submit" name="julkaise" id="lahetaJulk" value="Julkaise" class="button" />
+  </form>	
+
+  <script>	
+		  $('#lahetaJulk').click(function(event){
+		  event.preventDefault();
+		  data.append('title',$('#formtitle').val());
+		  data.append('kuvaus',$('#formkuvaus').val());
+		  data.append('sisalto',$('#formsisalto').val());
+		  data.append('user',<?php echo($_SESSION['user']);?>);
+		  data.append('aihe',aiheID);
+		  $.ajax({
+			url:"php/uploadvoice.php",
+			type:'POST',
+			data:data,
+			contentType: false,
+			processData: false,
+			success: function(data) {
+			  alert(data);
+			},    
+			error: function() {
+			  alert("not so boa!");
+			}
+		  });
+	  });			
+	  </script>
 				</div>
 			</div>
 		</div>
@@ -294,7 +310,7 @@ function haeKommentti(julkId){
 <script src="assets/js/foundation.min.js"></script>
 <script>
 
-//$(document).foundation();
+$(document).foundation();
 </script>
 
 	</body>
